@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.List;
 
@@ -52,9 +54,31 @@ public class BookResource {
             e.printStackTrace();
             return new ResponseEntity("Upload failed!", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @RequestMapping(value = "/update/image", method = RequestMethod.POST)
+    public ResponseEntity updateImagePost(@RequestParam("id") Long id, HttpServletResponse response, HttpServletRequest request){
+
+        try {
+            Book book = bookService.findOne(id);
+            MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
+            Iterator<String> iterator = multipartHttpServletRequest.getFileNames();
+            MultipartFile multipartFile = multipartHttpServletRequest.getFile(iterator.next());
+            String fileName = id + ".png";
+
+            Files.delete(Paths.get(System.getProperty("user.dir") + "/src/main/resources/static/image/book/" + fileName));
 
 
+            byte[] bytes = multipartFile.getBytes();
+            BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File(System.getProperty("user.dir") + "/src/main/resources/static/image/book/" + fileName)));
+            stream.write(bytes);
+            stream.close();
 
+            return new ResponseEntity("Upload Success!", HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity("Upload failed!", HttpStatus.BAD_REQUEST);
+        }
     }
 
     @RequestMapping("/bookList")
@@ -66,5 +90,10 @@ public class BookResource {
     public Book getBook(@PathVariable("id") Long id){
         Book book = bookService.findOne(id);
         return book;
+    }
+
+    @RequestMapping(value = "update", method = RequestMethod.POST)
+    public Book updateBookPost(@RequestBody Book book){
+        return bookService.save(book);
     }
 }
