@@ -103,9 +103,9 @@ public class BookResource {
     public ResponseEntity remove(@RequestBody String id) throws IOException {
         bookService.removeOne(Long.parseLong(id));
 
-//        String fileName = id + ".png";
-//
-//        Files.delete(Paths.get("/home/andreimerfu/Documents/bookstore-angular/src/bookstore/src/main/resources/static/image/book/" + fileName));
+        String fileName = id + ".png";
+
+        Files.delete(Paths.get(System.getProperty("user.dir") + "/src/main/resources/static/image/book/"+ fileName));
 
         return new ResponseEntity("Remove Success!", HttpStatus.OK);
     }
