@@ -68,4 +68,26 @@ public class UserResource {
 
         return new ResponseEntity("User Added Successfully!", HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/forgetPassword", method = RequestMethod.POST)
+    public ResponseEntity forgetPasswordPost(HttpServletRequest request, @RequestBody HashMap<String, String> mapper)
+            throws Exception {
+
+        User user = userService.findByEmail(mapper.get("email"));
+
+        if (user == null) {
+            return new ResponseEntity("Email not found", HttpStatus.BAD_REQUEST);
+        }
+        String password = SecurityUtility.randomPassword();
+
+        String encryptedPassword = SecurityUtility.passwordEncoder().encode(password);
+        user.setPassword(encryptedPassword);
+        userService.save(user);
+
+        SimpleMailMessage newEmail = mailConstructor.constructNewUserEmail(user, password);
+        mailSender.send(newEmail);
+
+        return new ResponseEntity("Email sent!", HttpStatus.OK);
+
+    }
 }
