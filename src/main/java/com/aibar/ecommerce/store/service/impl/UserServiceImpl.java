@@ -3,11 +3,9 @@ package com.aibar.ecommerce.store.service.impl;
 import com.aibar.ecommerce.store.domain.User;
 import com.aibar.ecommerce.store.domain.UserBilling;
 import com.aibar.ecommerce.store.domain.UserPayment;
+import com.aibar.ecommerce.store.domain.UserShipping;
 import com.aibar.ecommerce.store.domain.security.UserRole;
-import com.aibar.ecommerce.store.repository.RoleRepository;
-import com.aibar.ecommerce.store.repository.UserBillingRepository;
-import com.aibar.ecommerce.store.repository.UserPaymentRepository;
-import com.aibar.ecommerce.store.repository.UserRepository;
+import com.aibar.ecommerce.store.repository.*;
 import com.aibar.ecommerce.store.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +33,10 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserPaymentRepository userPaymentRepository;
+
+    @Autowired
+    private UserShippingRepository userShippingRepository;
+
 
     @Transactional
     public User createUser(User user, Set<UserRole> userRoles) {
@@ -105,6 +107,29 @@ public class UserServiceImpl implements UserService {
             } else {
                 userPayment.setDefaultPayment(false);
                 userPaymentRepository.save(userPayment);
+            }
+        }
+    }
+
+    @Override
+    public void updateUserShipping(UserShipping userShipping, User user) {
+        userShipping.setUser(user);
+        userShipping.setUserShippingDefault(true);
+        user.getUserShippingList().add(userShipping);
+        save(user);
+    }
+
+    @Override
+    public void setUserDefaultShipping(Long userShippingId, User user) {
+        List<UserShipping> userShippingList = (List<UserShipping>) userShippingRepository.findAll();
+
+        for (UserShipping userShipping : userShippingList) {
+            if(userShipping.getId() == userShippingId) {
+                userShipping.setUserShippingDefault(true);
+                userShippingRepository.save(userShipping);
+            } else {
+                userShipping.setUserShippingDefault(false);
+                userShippingRepository.save(userShipping);
             }
         }
     }
