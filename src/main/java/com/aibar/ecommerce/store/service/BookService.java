@@ -10,4 +10,6 @@ public interface BookService {
     Book save(Book book);
     List<Book> blurrySearch(String title);
     void removeOne(Long id);
+    List<Book> findAllByOrderByIdDesc();
+
 }

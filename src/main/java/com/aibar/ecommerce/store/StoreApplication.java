@@ -47,10 +47,10 @@ public class StoreApplication implements CommandLineRunner {
 
 
         User user2 = new User();
-        user2.setFirstName("Admin");
-        user2.setLastName("Admin");
-        user2.setUsername("admin");
-        user2.setPassword(SecurityUtility.passwordEncoder().encode("password"));
+        user2.setFirstName("ngc");
+        user2.setLastName("ngcdmin");
+        user2.setUsername("ngc23admin");
+        user2.setPassword(SecurityUtility.passwordEncoder().encode("Kap_Kara_Black85"));
         user2.setEmail("Admin@gmail.com");
         Role role2 = new Role();
         role2.setRoleId(0);

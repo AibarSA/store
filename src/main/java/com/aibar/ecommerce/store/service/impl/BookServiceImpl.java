@@ -1,13 +1,14 @@
 package com.aibar.ecommerce.store.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.aibar.ecommerce.store.domain.Book;
 import com.aibar.ecommerce.store.repository.BookRepository;
 import com.aibar.ecommerce.store.service.BookService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -24,7 +25,12 @@ public class BookServiceImpl implements BookService {
                 activeBookList.add(book);
             }
         }
-        return activeBookList;
+        return bookList;
+    }
+
+    public  List<Book> findAllByOrderByIdDesc(){
+        List<Book> bookList = (List<Book>) bookRepository.findAllByOrderByIdDesc();
+        return bookList;
     }
 
     @Override
